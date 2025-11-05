@@ -1,14 +1,29 @@
 import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/auth.route"
+import userRoutes from "./routes/user.route";
+import { connectDatabase } from "./config/db";
+import dotenv from "dotenv";
 
-const app=express();
-const PORT= process.env.PORT || 5000;
+dotenv.config();
+
+connectDatabase();
+
+const app = express();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.NODE_ENV === "production"
+      ? "https://"
+      : "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-app.use("/api", (req,res)=>{
-    console.log("request hit    ");
-});
+app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running on PORT ${PORT}`);
+app.listen(5000, () => {
+  console.log("Server is running at http://localhost:5000");
 });
