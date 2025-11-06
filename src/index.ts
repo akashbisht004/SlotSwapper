@@ -22,7 +22,7 @@ app.use(
 );
 
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
+app.use("/api", userRoutes);
 
 app.listen(5000, () => {
   console.log("Server is running at http://localhost:5000");

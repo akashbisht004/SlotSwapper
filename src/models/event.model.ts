@@ -1,11 +1,18 @@
 import { Schema, model, Document, Types } from "mongoose";
 
+export enum EventStatus {
+  BUSY = 'BUSY',
+  SWAPPABLE = 'SWAPPABLE',
+  SWAP_PENDING = 'SWAP_PENDING'
+}
+
 export interface IEvent extends Document {
   title: string;
   body: string;
+  status: EventStatus;
   startTime: Date;
   endTime: Date;
-  author: Types.ObjectId;
+  userId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,21 +26,26 @@ const EventSchema = new Schema<IEvent>(
       maxlength: [100, "Title cannot exceed 100 characters"],
       trim: true
     },
+    status: {
+      type: String,
+      enum: Object.values(EventStatus),
+      default: EventStatus.BUSY
+    },
     startTime: {
-        type: Date
+      type: Date
     },
     endTime: {
-        type: Date
+      type: Date
     },
     body: {
       type: String,
       required: [true, "Body is required"],
       minlength: [1, "Note cannot be empty"]
     },
-    author: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: [true, "Author is required"]
+      required: [true, "User is required"]
     }
   },
   { timestamps: true }
